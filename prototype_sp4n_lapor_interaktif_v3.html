@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SP4N-LAPOR! — Prototype Interaktif</title>
+<style>
+:root{
+  --red:#d80b3f; --red2:#ef174f; --red3:#ff416c; --ink:#1c2533; --muted:#687386;
+  --bg:#f6f7fb; --card:#fff; --line:#e9edf3; --green:#15976d; --amber:#d97706;
+  --shadow:0 16px 50px rgba(22,32,56,.10); --shadow2:0 8px 24px rgba(22,32,56,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.topnote{background:#ffe8ef;color:#8c1537;text-align:center;font-size:12px;padding:8px 16px;border-bottom:1px solid #ffd0dc}
+.nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(230,234,240,.9)}
+.navin{max-width:1220px;margin:auto;padding:14px 22px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--red);font-weight:900;letter-spacing:-.04em;font-size:22px}
+.brandmark{width:38px;height:30px;position:relative}
+.brandmark:before,.brandmark:after{content:"";position:absolute;border:3px solid var(--red);border-radius:5px;height:13px;width:20px;transform:skew(-10deg)}
+.brandmark:before{left:0;top:3px}.brandmark:after{left:9px;top:10px;background:rgba(216,11,63,.04)}
+.navlinks{display:flex;gap:20px;color:#536073;font-size:13px;font-weight:700}.navlinks a{text-decoration:none;color:inherit}
+.spacer{flex:1}.navbtn{border:1px solid #d9dee7;background:#fff;border-radius:9px;padding:9px 14px;font-weight:800;color:#424d5d}.navbtn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.hero{position:relative;overflow:hidden;background:linear-gradient(128deg,#bf0536 0%,#e50f47 55%,#ff416c 100%);color:#fff}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:999px;background:rgba(255,255,255,.08);filter:blur(1px)}
+.hero:before{width:520px;height:520px;right:-180px;top:-240px}.hero:after{width:420px;height:420px;left:-180px;bottom:-250px}
+.heroWave{position:absolute;left:-5%;right:-5%;bottom:-2px;height:100px;background:var(--bg);clip-path:ellipse(62% 60% at 50% 100%)}
+.heroin{max-width:1220px;margin:auto;padding:68px 22px 105px;position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:46px;align-items:center}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.10)}
+.hero h1{font-size:50px;line-height:1.05;letter-spacing:-.055em;margin:18px 0 14px;max-width:690px}.hero p{font-size:17px;color:#ffeaf0;max-width:650px;margin:0 0 25px}
+.heroactions{display:flex;gap:12px;flex-wrap:wrap}.hero .btn{padding:13px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.28);font-weight:900}.btn.white{background:#fff;color:var(--red)}.btn.soft{background:rgba(255,255,255,.1);color:#fff}
+.heroStats{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px}.hstat strong{font-size:20px}.hstat span{display:block;font-size:11px;color:#ffd4df}
+.mock{background:#fff;border-radius:22px;box-shadow:0 30px 70px rgba(65,2,20,.25);overflow:hidden;color:var(--ink);transform:rotate(1deg)}
+.mocktop{padding:12px 16px;background:#fafbfd;border-bottom:1px solid var(--line);display:flex;gap:7px}.dot{width:8px;height:8px;border-radius:50%;background:#d7dce5}.mockbody{padding:18px}
+.formhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.formtitle{font-weight:900;font-size:18px}.pill{font-size:11px;font-weight:900;background:#fff0f4;color:var(--red);border-radius:999px;padding:5px 9px}
+.classgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}.classitem{padding:10px 8px;border:1px solid #e0e5ec;border-radius:8px;text-align:center;font-size:11px;font-weight:900;color:#566176}.classitem.on{border-color:var(--red);color:var(--red);background:#fff5f7;box-shadow:inset 0 0 0 1px rgba(216,11,63,.08)}
+.fakeinput{height:35px;border:1px solid #dfe4eb;border-radius:7px;color:#929aaa;font-size:11px;padding:8px 10px;margin:8px 0}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mockcta{margin-top:12px;background:var(--red);color:#fff;text-align:center;border-radius:8px;padding:11px;font-size:12px;font-weight:900}
+.container{max-width:1220px;margin:auto;padding:0 22px}.section{padding:42px 0}.sectionhead{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.sectionhead h2{margin:0;font-size:25px;letter-spacing:-.035em}.sectionhead p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow2)}
+.quick{padding:17px}.quickgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quickitem{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:left;background:#fff;transition:.18s}.quickitem:hover{transform:translateY(-2px);border-color:#f3a4b8}.qicon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#fff1f4;color:var(--red);font-size:20px;margin-bottom:9px}.quickitem b{font-size:13px}.quickitem span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.trackCard{padding:18px}.trackbox{display:flex;gap:10px}.trackbox input{flex:1;min-width:0;border:1px solid #dce2eb;border-radius:10px;padding:12px}.trackbox button{border:0;border-radius:10px;background:var(--ink);color:#fff;padding:0 17px;font-weight:900}.miniHint{font-size:11px;color:var(--muted);margin-top:9px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:17px 16px}.stat small{color:var(--muted);display:block;font-size:11px}.stat strong{font-size:28px;letter-spacing:-.05em}.progress{height:6px;background:#eff2f6;border-radius:999px;margin-top:10px;overflow:hidden}.progress span{height:100%;display:block;background:linear-gradient(90deg,var(--red),#ff7b99);border-radius:inherit}
+.main{padding-bottom:60px}.workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}.workflow:before{content:"";height:3px;background:#e9edf3;left:8%;right:8%;top:28px;position:absolute;z-index:0}.wstep{position:relative;z-index:1;text-align:center}.wicon{margin:auto;width:56px;height:56px;border-radius:50%;background:#fff;border:3px solid #eef1f5;display:grid;place-items:center;font-weight:900;color:#8993a4;box-shadow:0 8px 20px rgba(25,35,55,.05)}.wstep.active .wicon{border-color:var(--red);color:var(--red);box-shadow:0 8px 24px rgba(216,11,63,.16)}.wstep.done .wicon{background:var(--red);border-color:var(--red);color:#fff}.wstep b{display:block;font-size:12px;margin-top:8px}.wstep span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.demo{margin-top:18px;display:grid;grid-template-columns:290px 1fr 280px;gap:18px}.screens{padding:0;overflow:hidden}.screenNav{background:#fff;border-right:1px solid var(--line);padding:14px}.navcard{padding:12px;border-radius:12px;border:1px solid var(--line);margin-bottom:8px;cursor:pointer}.navcard.active{border-color:#f2a0b5;background:#fff5f7}.navcard b{font-size:12px}.navcard span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.app{min-height:520px;background:#fff;overflow:hidden}.appbar{background:linear-gradient(90deg,var(--red),#ef174f);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px}.back{border:0;background:rgba(255,255,255,.13);width:30px;height:30px;border-radius:8px;color:#fff}.appbrand{font-weight:900}.appbody{padding:24px}.appbody h3{font-size:23px;margin:0 0 7px;letter-spacing:-.03em}.appbody p{color:var(--muted);font-size:13px;margin:0 0 18px}.reportform{display:grid;gap:12px}.label{font-size:11px;color:#677185;font-weight:900;text-transform:uppercase;letter-spacing:.04em}.input,.select,.textarea{border:1px solid #dce2ea;border-radius:9px;padding:11px 12px;outline:none;background:#fff;width:100%}.textarea{min-height:120px;resize:vertical}.radioRow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.radio{border:1px solid #dde3eb;padding:11px;border-radius:9px}.radio.on{border-color:var(--red);background:#fff5f7;color:var(--red)}.radio b{display:block;font-size:12px}.radio span{display:block;font-size:10px;color:var(--muted);margin-top:2px}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checks{display:flex;gap:16px;font-size:12px;color:#556173}.check{display:flex;gap:7px;align-items:center}.cta{border:0;background:var(--red);color:#fff;border-radius:10px;padding:12px 15px;font-weight:900}.ghost{border:1px solid #dbe0e7;background:#fff;color:#5a6575;border-radius:10px;padding:11px 15px;font-weight:800}
+.review{border:1px solid #e7ebf1;border-radius:12px;overflow:hidden}.review .rrow{display:grid;grid-template-columns:145px 1fr;gap:12px;padding:11px 13px;border-bottom:1px solid #eef1f5;font-size:12px}.review .rrow:last-child{border-bottom:0}.review .rrow span{color:var(--muted)}
+.statusBox{border:1px solid var(--line);border-radius:13px;padding:15px}.statusTop{display:flex;justify-content:space-between;gap:15px}.ticket{font-weight:900;font-size:13px}.badge{font-size:10px;background:#eaf7f2;color:var(--green);padding:5px 8px;border-radius:999px;font-weight:900}.timeline{margin:19px 0 0;position:relative}.timeline:before{content:"";position:absolute;left:10px;top:5px;bottom:4px;width:2px;background:#e8ecf1}.tl{position:relative;padding-left:32px;padding-bottom:16px}.tl:last-child{padding-bottom:0}.tl i{position:absolute;left:4px;top:0;width:13px;height:13px;border-radius:50%;background:#dfe4eb;border:3px solid #fff;box-shadow:0 0 0 2px #dfe4eb}.tl.done i{background:var(--red);box-shadow:0 0 0 2px #f8b4c5}.tl b{font-size:12px}.tl span{display:block;color:var(--muted);font-size:10px}
+.note{padding:18px;background:linear-gradient(180deg,#1f2937,#131a25);color:#e7ecf4;border-radius:16px;min-height:100%}.note .tag{display:inline-block;background:#fff;color:#1f2937;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900}.note h3{font-size:19px;margin:13px 0 7px;color:#fff}.note dt{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#9eacbf;margin-top:13px}.note dd{margin:3px 0 0;font-size:12px;color:#d6ddea}.toggle{border:1px solid #3c4758;color:#d9e1eb;background:#1b2431;border-radius:8px;padding:8px 10px;font-weight:800;font-size:11px}
+.reaction{display:grid;grid-template-columns:1fr .85fr;gap:18px}.satisfaction{padding:19px}.stars{font-size:34px;letter-spacing:5px;color:#e3a400;margin:12px 0}.quote{padding:19px;background:linear-gradient(135deg,#fff,#fff4f6);border:1px solid #f6d6de}.quote p{font-size:14px;font-style:italic;margin:0}.quote b{display:block;margin-top:14px;font-size:11px;color:#7a5360}
+.footer{background:#161e2a;color:#cdd6e3;padding:28px 0}.footerin{max-width:1220px;margin:auto;padding:0 22px;display:flex;justify-content:space-between;gap:20px;align-items:center}.footer small{color:#8f9bad}
+.toast{position:fixed;right:20px;bottom:20px;background:#1a2330;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:12px;display:none;z-index:50}.toast.show{display:block;animation:fade .2s ease}.hidden{display:none!important}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media(max-width:1000px){.heroin{grid-template-columns:1fr}.mock{max-width:620px}.layout{grid-template-columns:1fr}.demo{grid-template-columns:1fr !important}.screenNav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.navcard{margin:0}.reaction{grid-template-columns:1fr}}
+@media(max-width:720px){.navlinks{display:none}.hero h1{font-size:38px}.quickgrid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.workflow{grid-template-columns:1fr 1fr;gap:18px}.workflow:before{display:none}.formrow,.radioRow{grid-template-columns:1fr}.footerin{flex-direction:column;align-items:flex-start}.screenNav{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="topnote">PROTOTYPE KULIAH · Data dan nomor laporan pada simulasi ini bersifat fiktif dan tidak dikirim ke sistem SP4N-LAPOR! resmi.</div>
+<nav class="nav"><div class="navin"><div class="brand"><span class="brandmark"></span>LAPOR!</div><div class="navlinks"><a href="#home">Beranda</a><a href="#lapor">Sampaikan Laporan</a><a href="#proses">Proses</a><a href="#statistik">Statistik</a></div><div class="spacer"></div><button class="navbtn" onclick="toast('Demo login belum terhubung.')">Masuk</button><button class="navbtn primary" onclick="scrollToEl('lapor')">Lapor Sekarang</button></div></nav>
+
+<header class="hero" id="home"><div class="heroin"><div><span class="eyebrow">SP4N · Layanan Publik Nasional</span><h1>Berani LAPOR! Untuk pelayanan publik yang lebih baik.</h1><p>Sampaikan pengaduan, aspirasi, atau permintaan informasi kepada instansi pemerintah yang berwenang melalui satu pintu.</p><div class="heroactions"><button class="btn white" onclick="scrollToEl('lapor')">✦ Sampaikan Laporan</button><button class="btn soft" onclick="scrollToEl('proses')">Lihat cara kerjanya →</button></div><div class="heroStats"><div class="hstat"><strong>24/7</strong><span>Akses pelaporan digital</span></div><div class="hstat"><strong>3 hari</strong><span>Target verifikasi</span></div><div class="hstat"><strong>5 hari</strong><span>Target tindak lanjut</span></div></div></div>
+<div class="mock"><div class="mocktop"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="mockbody"><div class="formhead"><div><div class="formtitle">Sampaikan Laporan Anda</div><div style="font-size:10px;color:#8a95a5">Pilih klasifikasi laporan</div></div><span class="pill">DEMO</span></div><div class="classgrid"><div class="classitem on">◉ PENGADUAN</div><div class="classitem">○ ASPIRASI</div><div class="classitem">○ INFORMASI</div></div><div class="fakeinput">Ketik Judul Laporan Anda *</div><div class="twocol"><div class="fakeinput">Tanggal Kejadian *</div><div class="fakeinput">Lokasi Kejadian *</div></div><div class="fakeinput">Pilih Instansi Tujuan</div><div class="mockcta">LAPOR!</div></div></div></div><div class="heroWave"></div></header>
+
+<main class="main" id="lapor"><div class="container">
+<section class="section"><div class="sectionhead"><div><h2>Akses cepat</h2><p>Mulai dari hal yang ingin Anda lakukan.</p></div></div><div class="layout"><div class="card quick"><div class="quickgrid"><button class="quickitem" onclick="startReport('Pengaduan')"><div class="qicon">⚑</div><b>Buat Pengaduan</b><span>Laporkan masalah pelayanan publik.</span></button><button class="quickitem" onclick="startReport('Aspirasi')"><div class="qicon">◈</div><b>Sampaikan Aspirasi</b><span>Berikan usul atau masukan kebijakan.</span></button><button class="quickitem" onclick="startReport('Permintaan Informasi')"><div class="qicon">ⓘ</div><b>Minta Informasi</b><span>Ajukan permintaan informasi publik.</span></button></div></div><div class="card trackCard"><div style="font-weight:900;font-size:15px">Lacak laporan</div><div style="font-size:12px;color:var(--muted);margin:3px 0 12px">Masukkan nomor tiket simulasi.</div><div class="trackbox"><input id="trackInput" value="LP-2026-008741"><button onclick="showTrack()">Lacak</button></div><div class="miniHint">Contoh: LP-2026-008741</div></div></div></section>
+
+<section class="section" id="statistik"><div class="sectionhead"><div><h2>Ringkasan layanan</h2><p>Gambaran dashboard pada prototype.</p></div></div><div class="stats"><div class="card stat"><small>Laporan aktif</small><strong>21.000</strong><div class="progress"><span style="width:78%"></span></div></div><div class="card stat"><small>Instansi terhubung</small><strong>590</strong><div class="progress"><span style="width:62%"></span></div></div><div class="card stat"><small>Rata-rata verifikasi</small><strong>2,1 hari</strong><div class="progress"><span style="width:88%"></span></div></div><div class="card stat"><small>Kepuasan simulasi</small><strong>92%</strong><div class="progress"><span style="width:92%"></span></div></div></div></section>
+
+<section class="section" id="proses"><div class="sectionhead"><div><h2>Bagaimana laporan Anda diproses?</h2><p>Alur visual yang dibuat agar mudah dipahami saat presentasi.</p></div></div><div class="workflow"><div class="wstep done"><div class="wicon">1</div><b>Tulis laporan</b><span>Jelas & lengkap</span></div><div class="wstep done"><div class="wicon">2</div><b>Verifikasi</b><span>Target 3 hari</span></div><div class="wstep active"><div class="wicon">3</div><b>Tindak lanjut</b><span>Target 5 hari</span></div><div class="wstep"><div class="wicon">4</div><b>Beri tanggapan</b><span>Hingga 10 hari</span></div><div class="wstep"><div class="wicon">5</div><b>Selesai</b><span>Tetap terlacak</span></div></div></section>
+
+<section class="section" id="demo"><div class="sectionhead"><div><h2>Simulasi interaktif</h2><p>Jelajahi pengalaman pelapor dari awal sampai selesai.</p></div><button id="noteToggle" class="toggle" onclick="toggleNotes()">Catatan analisis: aktif</button></div><div class="demo"><div class="card screenNav" id="screenNav"></div><div class="card app"><div id="appbar" class="appbar"><button class="back" onclick="prevScreen()">←</button><div class="appbrand">SP4N-LAPOR!</div><div class="spacer"></div><span style="font-size:11px;opacity:.9">Simulasi</span></div><div id="appbody" class="appbody"></div></div></div></section>
+
+<section class="section"><div class="reaction"><div class="card satisfaction"><div style="font-weight:900">Bagaimana pengalaman Anda?</div><div class="stars">★★★★★</div><p style="margin:0;color:var(--muted);font-size:12px">Prototype menempatkan umpan balik di akhir proses agar pengalaman pelapor dapat menjadi bahan perbaikan.</p></div><div class="quote card"><p>“Saya bisa melihat status laporan tanpa harus datang ke kantor. Yang paling membantu adalah alasan perbaikan dokumen ditulis dengan jelas.”</p><b>— Contoh tanggapan pengguna · data fiktif</b></div></div></section>
+</div></main>
+
+<footer class="footer"><div class="footerin"><div><div class="brand" style="color:#fff">LAPOR!</div><small>Prototype UI/UX untuk kebutuhan presentasi dan pembelajaran.</small></div><small>Terinspirasi dari pola visual dan alur SP4N-LAPOR! publik, bukan replika resmi.</small></div></footer>
+<div id="toast" class="toast"></div>
+
+
+<style>
+.callout{margin:12px 0;padding:11px 12px;border:1px solid #f1ccd8;background:#fff5f7;border-radius:10px;display:flex;gap:10px;flex-direction:column;font-size:11px;color:#6a4652}
+.callout b{font-size:11px;color:var(--red)}
+.callout.blue{background:#f3f7ff;border-color:#d8e3fa;color:#52627a}.callout.blue b{color:#3566b3}
+.privacy{font-size:11px;color:#697486;background:#fafbfd;border:1px solid var(--line);padding:10px;border-radius:8px}
+.splitbtn{display:flex;gap:9px}
+.splitbtn>*{flex:1}
+.receiptKind{display:inline-flex;margin-top:12px;padding:5px 9px;border-radius:999px;background:#fff0f4;color:var(--red);font-weight:900;font-size:11px}
+.blueBadge{background:#eaf2ff !important;color:#3566b3 !important;border-color:#d2e0f8 !important}
+.responseCard{padding:17px;background:#fff8fa;border:1px solid #f3d7df}
+.responseMeta{font-size:10px;color:var(--red);font-weight:900;text-transform:uppercase}
+.responseTitle{font-weight:900;margin:8px 0;font-size:17px}.responseCard p{margin:0;color:#5e6877;font-size:12px}
+.responseTag{display:inline-block;margin-top:12px;padding:5px 8px;border-radius:999px;background:#ffeaf0;color:var(--red);font-size:10px;font-weight:900}
+.downloadList{display:grid;gap:8px;margin-top:14px}.downloadList>div{display:flex;justify-content:space-between;gap:8px;align-items:center;border:1px solid var(--line);padding:9px 11px;border-radius:8px;font-size:11px}
+.smallbtn{border:1px solid #d8dee8;background:#fff;border-radius:7px;padding:6px 9px;font-size:10px;font-weight:900;color:#4a5567}
+.infoResult h3{margin:12px 0 6px;font-size:19px}.infoResult p{font-size:12px;color:#5e6877}
+.finalChips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:12px}.finalChips span{padding:6px 9px;border-radius:999px;background:#f2faf6;border:1px solid #c9ecdf;color:#437460;font-size:10px;font-weight:900}
+</style>
+<script>
+const FLOW_META = {
+  'Pengaduan': {
+    ticket:'LP-2026-008741',
+    subtitle:'Keluhan atas masalah atau pelayanan publik yang perlu ditindaklanjuti.',
+    subject:'Lampu penerangan jalan mati di Jalan Melati',
+    body:'Lampu penerangan di sepanjang Jalan Melati tidak menyala selama beberapa hari sehingga jalan menjadi gelap pada malam hari. Mohon ditindaklanjuti.',
+    category:'Infrastruktur & fasilitas publik'
+  },
+  'Aspirasi': {
+    ticket:'LP-2026-008742',
+    subtitle:'Usul, ide, atau masukan masyarakat untuk perbaikan kebijakan dan layanan.',
+    subject:'Usulan penambahan halte ramah pejalan kaki',
+    body:'Saya mengusulkan penambahan halte dan tempat berteduh di koridor Jalan Merdeka agar akses transportasi umum lebih nyaman bagi pelajar, lansia, dan penyandang disabilitas.',
+    category:'Transportasi & fasilitas publik'
+  },
+  'Permintaan Informasi': {
+    ticket:'LP-2026-008743',
+    subtitle:'Permintaan atas informasi publik yang dikuasai badan publik/instansi terkait.',
+    subject:'Permintaan data penggunaan APBD untuk perbaikan jalan 2025',
+    body:'Mohon informasi mengenai daftar ruas jalan yang diperbaiki pada tahun 2025 beserta nilai anggaran dan status realisasinya.',
+    category:'Anggaran & pengadaan'
+  }
+};
+
+let selectedClass='Pengaduan';
+let current=0, showNotes=true;
+
+function classCard(kind, icon, desc){
+  const on = selectedClass===kind ? 'on' : '';
+  return `<button class="radio ${on}" onclick="pickClass(this,'${kind}')"><b>${icon} ${kind}</b><span>${desc}</span></button>`;
+}
+
+function commonS1(){
+  const m = FLOW_META[selectedClass];
+  const labels = {
+    'Pengaduan':['Judul pengaduan','Isi kejadian / masalah','Tanggal kejadian','Lokasi kejadian'],
+    'Aspirasi':['Judul aspirasi','Usulan / gagasan Anda','Bidang / tema','Wilayah terdampak'],
+    'Permintaan Informasi':['Judul permintaan informasi','Informasi yang diminta','Periode informasi','Format yang diinginkan']
+  }[selectedClass];
+
+  const defaultValues = {
+    'Pengaduan': [
+      m.subject,m.body,'20 Agustus 2026','Jalan Melati, Kota Nusaraya'
+    ],
+    'Aspirasi': [
+      m.subject,m.body,'Transportasi publik','Kota Nusaraya'
+    ],
+    'Permintaan Informasi': [
+      m.subject,m.body,'Januari–Desember 2025','Dokumen digital / PDF'
+    ]
+  }[selectedClass];
+
+  return `
+  <div class="reportform">
+    <div class="label">Klasifikasi laporan</div>
+    <div class="radioRow">
+      ${classCard('Pengaduan','⚑','Keluhan atas masalah atau pelayanan.')}
+      ${classCard('Aspirasi','◈','Usul dan masukan masyarakat.')}
+      ${classCard('Permintaan Informasi','ⓘ','Meminta informasi publik.')}
+    </div>
+
+    <div class="label">${labels[0]}</div>
+    <input id="judul" class="input" value="${defaultValues[0]}">
+
+    <div class="label">${labels[1]}</div>
+    <textarea id="isi" class="textarea">${defaultValues[1]}</textarea>
+
+    <div class="formrow">
+      <div>
+        <div class="label">${labels[2]}</div>
+        <input class="input" value="${defaultValues[2]}">
+      </div>
+      <div>
+        <div class="label">${labels[3]}</div>
+        <input class="input" value="${defaultValues[3]}">
+      </div>
+    </div>
+
+    <div class="callout ${selectedClass==='Permintaan Informasi'?'blue':''}">
+      <b>${selectedClass==='Pengaduan'?'Catatan untuk pelapor':'Panduan pengisian'}</b>
+      <span>${
+        selectedClass==='Pengaduan'
+        ? 'Jelaskan apa yang terjadi, kapan, di mana, dan dampaknya.'
+        : selectedClass==='Aspirasi'
+        ? 'Sampaikan masalah yang ingin diperbaiki dan solusi yang Anda usulkan.'
+        : 'Tulis informasi yang dibutuhkan secara spesifik agar pencarian dokumen lebih cepat.'
+      }</span>
+    </div>
+    <button class="cta" onclick="nextScreen()">Lanjut ke detail →</button>
+  </div>`;
+}
+
+const flows = {
+  'Pengaduan': [
+    {
+      title:'Mulai laporan', sub:'Ceritakan masalah pelayanan publik yang ingin Anda laporkan.',
+      note:['Jalur Pengaduan','Pelapor memulai dari fakta kejadian atau masalah yang dialami.','Prinsip: informasi cukup untuk memahami masalah tanpa membebani pelapor.','Desain: pertanyaan inti dipisahkan dari detail administrasi.'],
+      render:commonS1
+    },
+    {
+      title:'Lengkapi pengaduan', sub:'Tambahkan instansi, kategori, lampiran, dan pengaturan privasi.',
+      note:['Detail Pengaduan','Konteks lokasi, kategori, dan bukti membantu laporan diteruskan ke instansi yang tepat.','Prinsip: jangan meminta data yang tidak relevan.','Desain: detail dan pengaturan privasi dikumpulkan pada satu langkah.'],
+      render:()=>`<div class="reportform">
+        <div class="formrow"><div><div class="label">Instansi tujuan</div><select class="select"><option>Pemerintah Kota Nusaraya</option><option>Dinas PUPR</option><option>Dinas Perhubungan</option></select></div>
+        <div><div class="label">Kategori</div><select class="select"><option>Infrastruktur & fasilitas publik</option><option>Pelayanan masyarakat</option><option>Lingkungan</option></select></div></div>
+        <div class="label">Bukti / lampiran</div><div class="review"><div class="rrow"><span>Foto lokasi</span><b>✓ lampu-jalan.jpg · 1,2 MB</b></div><div class="rrow"><span>Video / dokumen</span><b>Tidak ada</b></div></div>
+        <div class="checks"><label class="check"><input type="checkbox" checked> Anonim</label><label class="check"><input type="checkbox" checked> Rahasia</label></div>
+        <div class="privacy">Anonim menyembunyikan identitas pelapor. Rahasia membatasi akses publik terhadap isi laporan.</div>
+        <div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Kembali</button><button class="cta" onclick="nextScreen()">Periksa pengaduan</button></div>
+      </div>`
+    },
+    {
+      title:'Periksa pengaduan', sub:'Pastikan fakta, lokasi, dan privasi sudah benar sebelum dikirim.',
+      note:['Check your answers','Kesalahan data sebelum kirim lebih murah diperbaiki daripada setelah laporan diteruskan.','Prinsip: berikan kesempatan meninjau kembali.','Desain: ringkasan memudahkan pemeriksaan cepat.'],
+      render:()=>`<div class="review">
+        <div class="rrow"><span>Jenis</span><b>Pengaduan</b></div><div class="rrow"><span>Judul</span><b>${FLOW_META['Pengaduan'].subject}</b></div>
+        <div class="rrow"><span>Lokasi</span><b>Jalan Melati, Kota Nusaraya</b></div><div class="rrow"><span>Instansi</span><b>Pemerintah Kota Nusaraya</b></div>
+        <div class="rrow"><span>Kategori</span><b>Infrastruktur & fasilitas publik</b></div><div class="rrow"><span>Privasi</span><b>Anonim · Rahasia</b></div>
+        </div><div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Ubah</button><button class="cta" onclick="nextScreen()">Kirim LAPOR!</button></div>`
+    },
+    {
+      title:'Pengaduan terkirim', sub:'Simpan nomor tiket untuk memantau tindak lanjut.',
+      note:['Tanda terima Pengaduan','Laporan membutuhkan identitas tiket yang dapat ditelusuri.','Prinsip: setelah submit, pelapor harus tahu apa yang terjadi berikutnya.','Desain: nomor tiket ditempatkan sebagai elemen utama.'],
+      render:()=>receipt('Pengaduan','LP-2026-008741')
+    },
+    {
+      title:'Status pengaduan', sub:'Lihat verifikasi dan tindak lanjut secara bertahap.',
+      note:['Transparansi Pengaduan','Status membantu pelapor mengetahui apakah laporan sudah diterima dan sedang ditangani.','Prinsip: proses harus dapat ditelusuri.','Desain: timeline menonjolkan tahap aktif dan keputusan berikutnya.'],
+      render:()=>timelineComplaint()
+    },
+    {
+      title:'Balasan instansi', sub:'Baca hasil tindak lanjut dan tentukan apakah masalah sudah terselesaikan.',
+      note:['Balasan Pengaduan','Balasan yang baik menjelaskan tindakan konkret instansi.','Prinsip: dapat ditindaklanjuti dan mudah dipahami.','Desain: hasil tindak lanjut dipisahkan dari metadata laporan.'],
+      render:()=>response('Pengaduan',
+        'Pemerintah Kota Nusaraya · 21 Agustus 2026',
+        'Perbaikan lampu telah dijadwalkan.',
+        'Petugas lapangan telah melakukan pengecekan. Penggantian komponen lampu dijadwalkan pada 22 Agustus 2026. Setelah perbaikan selesai, pelapor dapat memberikan tanggapan.')
+    },
+    {
+      title:'Beri tanggapan', sub:'Nilai hasil penanganan dan beri tahu bila masalah belum selesai.',
+      note:['Tanggapan Pengaduan','Umpan balik pelapor menjadi bukti apakah solusi benar-benar dirasakan.','Prinsip: tutup lingkaran layanan dengan suara pengguna.','Desain: rating dan komentar ditempatkan setelah balasan.'],
+      render:()=>feedback('Pengaduan')
+    },
+    {
+      title:'Pengaduan selesai', sub:'Proses ditutup setelah tindak lanjut dan tanggapan.',
+      note:['Penutupan Pengaduan','Riwayat tetap tersedia meski proses selesai.','Prinsip: transparansi dan arsip.','Desain: nomor tiket tetap menjadi kunci riwayat.'],
+      render:()=>doneCard('Pengaduan','LP-2026-008741')
+    }
+  ],
+  'Aspirasi': [
+    {
+      title:'Mulai aspirasi', sub:'Sampaikan usul atau masukan untuk memperbaiki kebijakan dan layanan.',
+      note:['Jalur Aspirasi','Aspirasi tidak harus berasal dari kejadian yang sedang berlangsung; fokusnya pada ide dan perbaikan ke depan.','Prinsip: bedakan solusi/usulan dari keluhan.','Desain: bidang dan wilayah menjadi konteks utama.'],
+      render:commonS1
+    },
+    {
+      title:'Detail aspirasi', sub:'Jelaskan manfaat, sasaran, dan konteks usulan Anda.',
+      note:['Mengembangkan Aspirasi','Instansi membutuhkan alasan dan sasaran agar usulan dapat dinilai.','Prinsip: konteks mendukung pengambilan keputusan.','Desain: tambahkan manfaat, sasaran penerima, dan lampiran pendukung.'],
+      render:()=>`<div class="reportform">
+        <div class="formrow"><div><div class="label">Instansi / bidang</div><select class="select"><option>Dinas Perhubungan</option><option>Pemerintah Kota Nusaraya</option><option>Dinas PUPR</option></select></div>
+        <div><div class="label">Tema</div><select class="select"><option>Transportasi publik</option><option>Pelayanan masyarakat</option><option>Lingkungan</option></select></div></div>
+        <div class="formrow"><div><div class="label">Sasaran penerima manfaat</div><input class="input" value="Pelajar, lansia, dan penyandang disabilitas"></div><div><div class="label">Wilayah</div><input class="input" value="Koridor Jalan Merdeka"></div></div>
+        <div class="label">Manfaat utama</div><textarea class="textarea">Membuat akses transportasi umum lebih aman, nyaman, dan inklusif.</textarea>
+        <div class="label">Lampiran pendukung</div><div class="review"><div class="rrow"><span>Foto kondisi lokasi</span><b>✓ halte-jalan-merdeka.jpg</b></div></div>
+        <div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Kembali</button><button class="cta" onclick="nextScreen()">Periksa aspirasi</button></div>
+      </div>`
+    },
+    {
+      title:'Periksa aspirasi', sub:'Pastikan usul, sasaran, dan manfaatnya sudah jelas.',
+      note:['Check your answers — Aspirasi','Aspirasi harus cukup spesifik agar dapat dibahas oleh instansi.','Prinsip: kejelasan tujuan dan manfaat.','Desain: ringkas usulan menjadi satu tampilan sebelum submit.'],
+      render:()=>`<div class="review"><div class="rrow"><span>Jenis</span><b>Aspirasi</b></div><div class="rrow"><span>Usulan</span><b>${FLOW_META['Aspirasi'].subject}</b></div><div class="rrow"><span>Bidang</span><b>Transportasi publik</b></div><div class="rrow"><span>Sasaran</span><b>Pelajar, lansia, penyandang disabilitas</b></div><div class="rrow"><span>Wilayah</span><b>Koridor Jalan Merdeka</b></div><div class="rrow"><span>Manfaat</span><b>Akses transportasi lebih aman dan inklusif</b></div></div><div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Ubah</button><button class="cta" onclick="nextScreen()">Kirim Aspirasi</button></div>`
+    },
+    {
+      title:'Aspirasi terkirim', sub:'Usulan tercatat dan akan diteruskan untuk penelaahan.',
+      note:['Tanda terima Aspirasi','Aspirasi memiliki jalur setelah submit yang berbeda dengan pengaduan.','Prinsip: pelapor tahu bahwa usulnya masuk proses penelaahan.','Desain: nomor tiket dan tahap review ditonjolkan.'],
+      render:()=>receipt('Aspirasi','LP-2026-008742')
+    },
+    {
+      title:'Status aspirasi', sub:'Pantau proses telaah, koordinasi, dan respons kebijakan.',
+      note:['Transparansi Aspirasi','Aspirasi cenderung memerlukan telaah dan koordinasi sebelum ada keputusan.','Prinsip: ekspektasi pelapor harus realistis.','Desain: timeline menampilkan proses pertimbangan, bukan status “ditindaklanjuti” semata.'],
+      render:()=>timelineAspirasi()
+    },
+    {
+      title:'Respons instansi', sub:'Lihat bagaimana instansi menanggapi usulan Anda.',
+      note:['Respons Aspirasi','Respons harus menjelaskan apakah usulan dipertimbangkan, diterapkan, atau belum dapat dilaksanakan.','Prinsip: alasan keputusan penting bagi kepercayaan publik.','Desain: keputusan + alasan + langkah berikutnya dalam satu kartu.'],
+      render:()=>response('Aspirasi',
+        'Dinas Perhubungan · 25 Agustus 2026',
+        'Usulan masuk daftar penataan halte tahun anggaran berikutnya.',
+        'Usulan telah dibahas dalam rapat teknis. Koridor Jalan Merdeka akan dipetakan untuk kebutuhan halte dan aksesibilitas. Pelaksanaan akan disesuaikan dengan prioritas anggaran.')
+    },
+    {
+      title:'Beri tanggapan', sub:'Sampaikan tanggapan terhadap respons instansi.',
+      note:['Tanggapan Aspirasi','Pada aspirasi, umpan balik dapat menilai kualitas respons dan manfaat kebijakan yang diusulkan.','Prinsip: dialog publik tidak berhenti pada submit.','Desain: rating dan komentar tetap dipisahkan agar mudah dipindai.'],
+      render:()=>feedback('Aspirasi')
+    },
+    {
+      title:'Aspirasi selesai', sub:'Riwayat usulan tetap tersimpan sebagai bagian dari perjalanan laporan.',
+      note:['Penutupan Aspirasi','Tidak semua aspirasi berakhir dengan implementasi langsung; yang penting adalah status dan responsnya jelas.','Prinsip: transparansi keputusan.','Desain: simpan status akhir dan respons instansi.'],
+      render:()=>doneCard('Aspirasi','LP-2026-008742')
+    }
+  ],
+  'Permintaan Informasi': [
+    {
+      title:'Mulai permintaan informasi', sub:'Jelaskan informasi publik yang Anda butuhkan secara spesifik.',
+      note:['Jalur Permintaan Informasi','Fokus utama bukan “kejadian”, melainkan dokumen/data yang ingin diketahui.','Prinsip: semakin spesifik permintaan, semakin mudah pencarian.','Desain: periode dan format diletakkan sejak awal.'],
+      render:commonS1
+    },
+    {
+      title:'Detail permintaan informasi', sub:'Tentukan instansi, jenis dokumen, periode, dan format jawaban.',
+      note:['Detail Informasi','Instansi perlu mengetahui jenis informasi yang dicari agar dapat menunjuk pengelola informasi yang tepat.','Prinsip: permintaan harus operasional dan tidak ambigu.','Desain: metadata dokumen menjadi inti formulir.'],
+      render:()=>`<div class="reportform">
+        <div class="formrow"><div><div class="label">Instansi tujuan</div><select class="select"><option>Pemerintah Kota Nusaraya</option><option>PPID Dinas PUPR</option><option>PPID Dinas Perhubungan</option></select></div><div><div class="label">Jenis informasi</div><select class="select"><option>Data anggaran & realisasi</option><option>Dokumen perencanaan</option><option>Data pelayanan publik</option></select></div></div>
+        <div class="formrow"><div><div class="label">Periode</div><input class="input" value="Januari–Desember 2025"></div><div><div class="label">Format jawaban</div><select class="select"><option>Dokumen digital / PDF</option><option>Spreadsheet</option><option>Data ringkas</option></select></div></div>
+        <div class="label">Tambahan penjelasan</div><textarea class="textarea">Mohon mencantumkan nama ruas jalan, nilai pagu/anggaran, realisasi, dan status pekerjaan.</textarea>
+        <div class="callout blue"><b>Privasi dan akurasi</b><span>Untuk prototype ini, data pemohon disederhanakan. Dalam layanan nyata, mekanisme verifikasi dan pengecualian informasi mengikuti ketentuan yang berlaku.</span></div>
+        <div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Kembali</button><button class="cta" onclick="nextScreen()">Periksa permintaan</button></div>
+      </div>`
+    },
+    {
+      title:'Periksa permintaan', sub:'Pastikan informasi yang diminta cukup spesifik.',
+      note:['Check your answers — Informasi','Review penting untuk menghindari bolak-balik klarifikasi mengenai dokumen yang diminta.','Prinsip: kejelasan ruang lingkup permintaan.','Desain: tampilkan periode, format, dan rincian data secara eksplisit.'],
+      render:()=>`<div class="review"><div class="rrow"><span>Jenis</span><b>Permintaan Informasi</b></div><div class="rrow"><span>Permintaan</span><b>${FLOW_META['Permintaan Informasi'].subject}</b></div><div class="rrow"><span>Instansi</span><b>PPID Pemerintah Kota Nusaraya</b></div><div class="rrow"><span>Periode</span><b>Januari–Desember 2025</b></div><div class="rrow"><span>Format</span><b>Dokumen digital / PDF</b></div><div class="rrow"><span>Rincian</span><b>Nama ruas, anggaran, realisasi, status</b></div></div><div class="splitbtn"><button class="ghost" onclick="prevScreen()">← Ubah</button><button class="cta" onclick="nextScreen()">Kirim Permintaan</button></div>`
+    },
+    {
+      title:'Permintaan terkirim', sub:'Permintaan tercatat untuk diproses oleh pengelola informasi.',
+      note:['Tanda terima Informasi','Pelapor perlu bukti bahwa permintaan telah diterima dan dapat dilacak.','Prinsip: kepastian proses dan riwayat.','Desain: nomor tiket dan tahap pencarian dokumen ditampilkan sejak awal.'],
+      render:()=>receipt('Permintaan Informasi','LP-2026-008743')
+    },
+    {
+      title:'Status permintaan informasi', sub:'Pantau verifikasi, pencarian dokumen, dan penyusunan jawaban.',
+      note:['Transparansi Informasi','Tahapan permintaan informasi berbeda karena instansi perlu menemukan dan menilai dokumen yang diminta.','Prinsip: status yang jelas mengurangi pertanyaan ulang dari pemohon.','Desain: tahap pencarian dan pemeriksaan ditampilkan sebagai aktivitas terpisah.'],
+      render:()=>timelineInfo()
+    },
+    {
+      title:'Jawaban informasi', sub:'Lihat hasil pencarian dan dokumen yang tersedia.',
+      note:['Jawaban Informasi','Jawaban sebaiknya menjelaskan dokumen apa yang tersedia dan bagaimana mengaksesnya.','Prinsip: hasil harus spesifik dan dapat digunakan.','Desain: ringkasan jawaban, daftar lampiran, dan catatan akses dibuat terpisah.'],
+      render:()=>`<div class="infoResult">
+        <div class="infoHead"><span class="badge green">INFORMASI TERSEDIA</span><span class="mini">PPID Pemerintah Kota Nusaraya · 27 Agustus 2026</span></div>
+        <h3>Data penggunaan APBD untuk perbaikan jalan 2025</h3>
+        <p>Dokumen yang ditemukan mencakup daftar ruas, nilai anggaran, realisasi, dan status pekerjaan pada tahun 2025.</p>
+        <div class="downloadList"><div><span>📄 Rekap perbaikan jalan 2025</span><button class="smallbtn" onclick="toast('Demo: membuka PDF rekap.')">Lihat</button></div><div><span>📊 Ringkasan anggaran & realisasi</span><button class="smallbtn" onclick="toast('Demo: membuka spreadsheet.')">Lihat</button></div></div>
+        <div class="splitbtn"><button class="ghost" onclick="toast('Demo: simpan jawaban tidak aktif.')">Simpan</button><button class="cta" onclick="nextScreen()">Beri tanggapan</button></div>
+      </div>`
+    },
+    {
+      title:'Beri tanggapan', sub:'Nilai kejelasan dan kelengkapan jawaban yang Anda terima.',
+      note:['Tanggapan Informasi','Pada jalur informasi, umpan balik dapat menilai apakah jawaban mudah dipahami dan sesuai permintaan.','Prinsip: kualitas respons dapat dievaluasi oleh pengguna.','Desain: nilai jawaban secara terpisah dari dokumen yang diberikan.'],
+      render:()=>feedback('Permintaan Informasi')
+    },
+    {
+      title:'Permintaan selesai', sub:'Jawaban dan riwayat permintaan tetap dapat dilacak melalui nomor tiket.',
+      note:['Penutupan Informasi','Dokumen dan jawaban menjadi hasil akhir yang perlu mudah ditemukan kembali.','Prinsip: akses dan arsip.','Desain: nomor tiket tetap menjadi kunci riwayat.'],
+      render:()=>doneCard('Permintaan Informasi','LP-2026-008743')
+    }
+  ]
+};
+
+function receipt(kind,ticket){
+  return `<div class="statusBox"><div class="statusTop"><div><div class="ticket">${ticket}</div><div style="font-size:11px;color:var(--muted)">Dikirim 20 Agustus 2026 · 10:14 WIB</div></div><span class="badge">DITERIMA</span></div>
+  <div class="receiptKind">${kind}</div><div style="margin-top:12px;font-size:13px"><b>Tahap berikutnya:</b> verifikasi dan penerusan ke instansi yang berwenang.</div></div>
+  <div class="splitbtn" style="margin-top:14px"><button class="ghost" onclick="toast('Demo: tanda terima PDF tidak aktif.')">Unduh tanda terima</button><button class="cta" onclick="nextScreen()">Lacak proses</button></div>`;
+}
+function timelineComplaint(){
+  return `<div class="statusBox"><div class="statusTop"><div><div class="ticket">LP-2026-008741</div><div style="font-size:11px;color:var(--muted)">Pengaduan · Infrastruktur publik</div></div><span class="badge">SEDANG DITINDAKLANJUTI</span></div><div class="timeline">
+  <div class="tl done"><i></i><b>20 Agustus · Laporan diterima</b><span>Laporan tercatat pada sistem.</span></div>
+  <div class="tl done"><i></i><b>20 Agustus · Verifikasi selesai</b><span>Laporan diteruskan ke Pemerintah Kota Nusaraya.</span></div>
+  <div class="tl done"><i></i><b>21 Agustus · Tindak lanjut dimulai</b><span>Instansi sedang memeriksa kondisi lapangan.</span></div>
+  <div class="tl"><i></i><b>Balasan instansi</b><span>Menunggu hasil tindak lanjut.</span></div>
+  </div></div><button class="cta" style="margin-top:14px" onclick="nextScreen()">Lihat balasan →</button>`;
+}
+function timelineAspirasi(){
+  return `<div class="statusBox"><div class="statusTop"><div><div class="ticket">LP-2026-008742</div><div style="font-size:11px;color:var(--muted)">Aspirasi · Transportasi publik</div></div><span class="badge">DALAM PENELAAHAN</span></div><div class="timeline">
+  <div class="tl done"><i></i><b>20 Agustus · Aspirasi diterima</b><span>Usulan tercatat pada sistem.</span></div>
+  <div class="tl done"><i></i><b>21 Agustus · Telaah awal</b><span>Substansi dan sasaran usulan telah diperiksa.</span></div>
+  <div class="tl done"><i></i><b>23 Agustus · Koordinasi teknis</b><span>Usulan dibahas bersama unit terkait.</span></div>
+  <div class="tl"><i></i><b>Respons instansi</b><span>Menunggu keputusan/arah tindak lanjut.</span></div>
+  </div></div><button class="cta" style="margin-top:14px" onclick="nextScreen()">Lihat respons →</button>`;
+}
+function timelineInfo(){
+  return `<div class="statusBox"><div class="statusTop"><div><div class="ticket">LP-2026-008743</div><div style="font-size:11px;color:var(--muted)">Permintaan Informasi · Anggaran publik</div></div><span class="badge blueBadge">PENCARIAN DOKUMEN</span></div><div class="timeline">
+  <div class="tl done"><i></i><b>20 Agustus · Permintaan diterima</b><span>Permintaan dicatat dan diverifikasi.</span></div>
+  <div class="tl done"><i></i><b>21 Agustus · Ditugaskan ke PPID</b><span>Permintaan diteruskan ke pengelola informasi.</span></div>
+  <div class="tl done"><i></i><b>24 Agustus · Pencarian dokumen</b><span>Dokumen anggaran dan realisasi sedang dihimpun.</span></div>
+  <div class="tl"><i></i><b>Jawaban</b><span>Menunggu penyampaian hasil pencarian.</span></div>
+  </div></div><button class="cta" style="margin-top:14px" onclick="nextScreen()">Lihat jawaban →</button>`;
+}
+function response(kind,date,title,body){
+  return `<div class="card responseCard"><div class="responseMeta">${date}</div><div class="responseTitle">${title}</div><p>${body}</p>
+  <div class="responseTag">${kind==='Aspirasi'?'KEPUTUSAN / ARAH TINDAK LANJUT':'HASIL TINDAK LANJUT'}</div></div>
+  <div class="splitbtn" style="margin-top:14px"><button class="ghost" onclick="toast('Demo: cetak tidak aktif.')">Cetak</button><button class="cta" onclick="nextScreen()">Beri tanggapan</button></div>`;
+}
+function feedback(kind){
+  const text = kind==='Aspirasi'
+    ? 'Responsnya jelas dan saya berharap usulan ini benar-benar masuk perencanaan.'
+    : kind==='Permintaan Informasi'
+    ? 'Dokumennya mudah dipahami dan sesuai dengan informasi yang saya minta.'
+    : 'Lampu sudah diperbaiki. Terima kasih atas tindak lanjutnya.';
+  return `<div class="label">Penilaian ${kind}</div><div class="stars" onclick="rate()">★★★★★</div><div class="label">Tanggapan</div><textarea class="textarea">${text}</textarea>
+  <div class="splitbtn" style="margin-top:12px"><button class="ghost" onclick="toast('Tanggapan dilewati dalam demo.')">Lewati</button><button class="cta" onclick="nextScreen()">Kirim tanggapan</button></div>`;
+}
+function doneCard(kind,ticket){
+  return `<div class="card" style="padding:20px;text-align:center;background:#f0faf6;border:1px solid #c9ecdf"><div style="font-size:34px">✓</div><div style="font-size:20px;font-weight:900;color:var(--green)">Proses selesai</div><p style="margin:5px 0 0;color:#567267;font-size:12px">${kind} · ${ticket}</p></div><div class="finalChips"><span>✓ Tersimpan</span><span>✓ Dapat dilacak</span><span>✓ Riwayat tersedia</span></div><button class="cta" style="margin-top:14px" onclick="restart()">Buat laporan baru</button>`;
+}
+
+function screens(){ return flows[selectedClass]; }
+
+function render(){
+  const list = screens();
+  current=Math.max(0,Math.min(current,list.length-1));
+  const s=list[current];
+  document.getElementById('appbody').innerHTML=s.render();
+  document.getElementById('screenNav').innerHTML=list.map((x,i)=>`<div class="navcard ${i===current?'active':''}" onclick="goScreen(${i})"><b>${i+1}. ${x.title}</b><span>${x.sub.substring(0,62)}...</span></div>`).join('');
+  const old=document.getElementById('liveNote'); if(old) old.remove();
+  const note=document.createElement('aside');
+  note.className='note'; note.id='liveNote';
+  note.innerHTML=`<span class="tag">CATATAN ANALISIS</span><h3>${s.note[0]}</h3><dl><dt>Konteks</dt><dd>${s.note[1]}</dd><dt>Kriteria</dt><dd>${s.note[2]}</dd><dt>Rekomendasi</dt><dd>${s.note[3]}</dd></dl>`;
+  document.querySelector('.demo').appendChild(note);
+  note.style.gridColumn='2'; note.style.display=showNotes?'block':'none';
+  document.querySelector('.app').style.gridColumn=showNotes?'2':'1 / -1';
+  document.getElementById('appbar').querySelector('.back').style.visibility=current===0?'hidden':'visible';
+}
+function goScreen(i){ current=i; render(); document.getElementById('demo').scrollIntoView({behavior:'smooth',block:'start'}); }
+function nextScreen(){ goScreen(current+1); }
+function prevScreen(){ goScreen(current-1); }
+function restart(){ current=0; selectedClass='Pengaduan'; render(); scrollToEl('demo'); }
+function toggleNotes(){ showNotes=!showNotes; document.getElementById('noteToggle').textContent='Catatan analisis: '+(showNotes?'aktif':'mati'); render(); }
+function pickClass(el,kind){
+  selectedClass=kind; current=0; render();
+  toast('Jalur '+kind+' dipilih.');
+}
+function startReport(kind){ selectedClass=kind; current=0; render(); toast('Form '+kind+' dibuka.'); scrollToEl('demo'); }
+function showTrack(){
+  const v=document.getElementById('trackInput').value.trim().toUpperCase();
+  const found=['LP-2026-008741','LP-2026-008742','LP-2026-008743'].includes(v);
+  if(v==='LP-2026-008742') selectedClass='Aspirasi';
+  else if(v==='LP-2026-008743') selectedClass='Permintaan Informasi';
+  else selectedClass='Pengaduan';
+  current=4; render();
+  toast(found?'Laporan ditemukan — status simulasi ditampilkan.':'Demo menemukan tiga tiket: LP-2026-008741/42/43.');
+  scrollToEl('demo');
+}
+function rate(){ toast('Demo: rating 5 bintang dipilih.'); }
+function scrollToEl(id){ document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window.tt); window.tt=setTimeout(()=>t.classList.remove('show'),2500); }
+
+render();
+</script>
+</body>
+</html>
