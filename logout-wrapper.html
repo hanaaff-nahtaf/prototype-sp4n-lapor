@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SP4N-LAPOR!</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f7fa}iframe{width:100%;height:100%;border:0;display:block}</style>
+</head>
+<body>
+<iframe id="appFrame" src="/app.html" title="SP4N-LAPOR!"></iframe>
+<script>
+const frame=document.getElementById('appFrame');
+let lastUser;
+try{lastUser=localStorage.getItem('sp4n_user')}catch(e){lastUser=null}
+setInterval(()=>{
+  let current=null;
+  try{current=localStorage.getItem('sp4n_user')}catch(e){}
+  if(lastUser && !current){
+    frame.src='/app.html?logoutReset='+Date.now();
+  }
+  lastUser=current;
+},250);
+</script>
+</body>
+</html>
