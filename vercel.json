@@ -1,1 +1,3 @@
-{"rewrites":[{"source":"/","destination":"/main.html"}]}
+{
+  "rewrites": [{"source": "/", "destination": "/cloud.html"}]
+}
